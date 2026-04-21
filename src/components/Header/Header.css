@@ -1,0 +1,38 @@
+header{
+    position: sticky;
+    top: -176px;
+    background: var(--black);
+    color: var(--gray-text);
+    z-index: 1000;
+}
+header > p{
+    font-size: 45px;
+    font-weight: bold;
+    text-align: center;
+    padding: 55px 0;
+    letter-spacing: 4px;
+}
+header a{
+    color: var(--gray-text);
+}
+#big-letter{
+    font-size: 55px;
+    color: var(--red);
+    position: relative;
+    left: 2px;
+    top: 1px;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media(max-width: 979px){
+    header{
+        top: -94px;
+    }
+    header > p {
+        padding: 20px 0;
+        font-size: 35px;
+    }
+    #big-letter{
+        font-size: 45px;
+    }
+}

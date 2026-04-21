@@ -1,0 +1,10 @@
+.no-result{
+    padding: 15px 0;
+    width: 280px;
+    text-align: center;
+    background: #d5d5d582;
+    border-radius: 5px;
+    color: var(--black);
+    border: 1px solid gray;
+    font-weight: 700;
+}

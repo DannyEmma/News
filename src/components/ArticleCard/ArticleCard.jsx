@@ -1,0 +1,206 @@
+import { useState, useEffect } from 'react'
+import { Link, useLocation, useParams } from 'react-router-dom'
+import useConvertUTC from '../../hooks/useConvertUTC.js'
+import useCreateSlug from '../../hooks/useCreateSlug.js'
+import useTranslateCategory from '../../hooks/useTranslateCategory.js'
+
+import './ArticleCard.css'
+
+
+/**
+ * This component display an article card to several formats:
+ * - highlight : is the big format (title, description, preview content)
+ * - normal : is the format whith a title below the image (image, title)
+ * - aside : is a format whith image beside the title (image, title)
+ * - long aside : same format of aside but the image take less space and title more space (image, title)
+ * - inline : is a format whith title only (title)
+ * - search : is the format use when user search news
+ * @export
+ * @param {object} {article}
+ * @param {string} {variant} - highlight | normal | aside | long-aside | inline | search
+ * @return {React.Element} 
+ */
+export default function ArticleCard({article, variant}){
+    const {year, month, date} = useConvertUTC(article.published_at)    
+    const [currentVariant, setCurrentVariant] = useState(variant)
+    const location = useLocation()
+    const { query } = useParams()
+
+    let basePath = null
+
+    switch(location.pathname.split('/')[1]){
+        case 'search':
+            basePath = `/search/${query}`
+            break
+        case '':
+            basePath = `/${useTranslateCategory('fr', article.category)}`
+            break
+        default:
+            basePath = '/' + location.pathname.split('/')[1]
+    }
+
+    useEffect(() => {
+        const handleResize = () => {
+            if(window.innerWidth < 980){
+                if(currentVariant === 'aside') setCurrentVariant('long-aside')
+            } else {
+                setCurrentVariant(variant)
+            }
+        }
+
+        //-- Call on resize event --
+        window.addEventListener('resize', handleResize)
+
+        //-- Initial call --
+        handleResize()
+
+        //-- Clear the previous event if useEffect is call again --
+        return () => {
+            window.removeEventListener('resize', handleResize)
+        }
+    }, [])
+
+
+    return (
+        <>
+            {/* ----- Formats : Highlight, Normal, Inline -----*/}
+
+            { (currentVariant === 'highlight' || currentVariant === 'normal' || currentVariant === 'inline') && 
+                <Link to={`${basePath}/article/${useCreateSlug(article.title)}`} state={article}>
+
+                    <div className={`article-card article-card-${currentVariant}`}>
+                        {currentVariant === 'highlight' && 
+                            /* --- Title --- */
+                            <div className={`article-card-title article-card-${currentVariant}-title`}>
+                                <p>{article.title}</p>
+                            </div>
+                        }
+                        
+                        {/* --- Image --- */}
+                        <div className={`article-card-image article-card-${currentVariant}-image article-card-ratio-image-16-9`}>
+                            <img src={article.image} alt="Article Card Illustration" />
+                        </div>
+
+                        {currentVariant !== 'highlight' && 
+                            /* --- Title --- */
+                            <div className={`article-card-title article-card-${currentVariant}-title`}>
+                                <p>{article.title}</p>
+                            </div>
+                        }
+                        
+                        {/* --- Description --- */}
+                        <div className={`article-card-description article-card-${currentVariant}-description`}>
+                            <p>{article.description}</p>
+                        </div>
+                        
+                        {/* --- Preview Content --- */}
+                        <div className={`article-card-${currentVariant}-preview-content`}>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ut pretium libero. Vestibulum ac aliquet nibh. Curabitur placerat convallis varius. Mauris eu sodales leo. Praesent vulputate turpis vitae finibus blandit. Aliquam nibh elit, tempus ac lorem ut, pharetra ultrices nunc. Duis vel lacus lorem. Fusce semper sit amet libero quis pretium. Duis dignissim dui diam, sit amet iaculis odio posuere quis. Aenean maximus pellentesque fermentum. In velit tortor, dignissim nec pellentesque in, mattis vel diam. Donec ornare ex et volutpat consectetur. In massa massa, rhoncus et ultricies nec, malesuada quis felis.</p>
+
+                            <p>Quisque nec mauris nulla. Etiam magna est, sagittis eu mi eu, semper iaculis ipsum. Sed pretium, nisi ut commodo dapibus, augue nisl convallis enim, sed finibus lacus lorem vel mauris. Morbi laoreet rutrum mattis. Proin id porttitor ligula. Suspendisse bibendum eget diam at tempus. Aenean quis nisi vitae quam auctor cursus. Sed molestie, magna vel consectetur volutpat, justo ipsum vehicula justo, et laoreet lorem libero a purus. Nunc eget mi non risus dapibus volutpat ac quis massa. Sed interdum arcu sed dolor sodales vestibulum. Donec in placerat elit. Nulla lectus sapien, hendrerit vitae ligula a, suscipit bibendum nulla. Proin pulvinar luctus egestas. Donec dignissim lectus id massa tincidunt semper. Fusce rhoncus ex libero, nec tincidunt urna mattis vitae. Morbi placerat nec ex at rutrum.</p>
+
+                            <p>Praesent justo felis, tincidunt vitae purus a, accumsan rutrum magna. In aliquet eu metus a aliquam. Sed massa arcu, viverra et fermentum id, bibendum quis eros. Donec sit amet nibh consequat, dignissim nulla et, tempus urna. Sed ante lectus, luctus eu risus id, ultrices scelerisque neque. Sed sed placerat tellus. Maecenas rhoncus tempor elit, non imperdiet magna posuere non. Proin quis auctor justo. Integer lectus nisi, bibendum non elementum ac, tempor quis mauris. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae;</p>
+
+                            <p>Donec congue nulla eu eros elementum, porttitor volutpat massa auctor. Interdum et malesuada fames ac ante ipsum primis in faucibus. Integer ut magna libero. Vivamus at diam dictum, posuere neque ornare, viverra metus. Nunc ac tincidunt purus, et ultricies urna. Sed consectetur nunc vitae dolor faucibus suscipit. In facilisis orci fermentum, mattis lacus quis, viverra tellus. Proin vitae ex tempor, pellentesque dui et, vulputate tellus. Aenean sed cursus diam. Vestibulum mollis quam a risus finibus egestas.</p>
+
+                            <p>Integer eget rhoncus nisl. Suspendisse nec augue quis enim rhoncus posuere. Fusce ut tincidunt dui. Sed ut rutrum ex. Nulla facilisi. Sed dapibus in enim et pharetra. Nam vulputate mi nibh. Aliquam vestibulum arcu id libero tempus consectetur. Mauris ornare posuere elementum. Sed ultrices non nulla non interdum. Suspendisse sagittis, odio finibus vulputate convallis, justo lacus interdum nulla, et mattis urna neque id ligula.</p>
+
+                            <p>Integer sit amet justo sit amet nulla bibendum gravida sed bibendum enim. Donec pellentesque nunc sit amet nisi bibendum, nec auctor nunc ultricies. Mauris bibendum luctus nibh, id gravida neque consectetur eleifend. Duis et nulla ut dolor semper bibendum. Nam gravida eget nibh vitae scelerisque. Quisque quis commodo enim. Mauris ut felis sed sem euismod gravida et varius nunc.</p>
+
+                            <p>Nam lacus eros, pulvinar at sollicitudin id, vestibulum mollis libero. Phasellus semper semper lorem nec maximus. Vivamus neque enim, tincidunt in tellus quis, egestas dictum risus. Ut magna felis, luctus volutpat convallis a, volutpat fringilla purus. Nam lacinia turpis et facilisis tempus. Donec rhoncus, nunc non vulputate venenatis, nulla magna ultricies ante, sed luctus magna orci quis eros. Sed in tincidunt leo, et malesuada leo.</p>
+
+                            <p>Quisque mollis neque tortor, rhoncus cursus lorem posuere et. Aliquam dapibus, ante in facilisis rhoncus, massa nibh pulvinar dolor, ut tempor neque nibh sed mauris. Sed efficitur mi sit amet sodales tristique. Nunc imperdiet mollis congue. Etiam volutpat imperdiet magna sed malesuada. Suspendisse ac lorem molestie, accumsan nibh dignissim, fringilla felis. Nam mattis eros a iaculis pellentesque. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Duis augue eros, semper sit amet semper eget, imperdiet ac libero. Aenean placerat, ex vitae rutrum interdum, augue ante vulputate purus, a vulputate nisi odio a erat. Aenean at augue mollis, pulvinar elit ac, posuere libero. Nam tincidunt convallis dolor, sed scelerisque nibh tincidunt ut.</p>
+
+                            <p>Sed ac rhoncus nunc. Pellentesque dictum vestibulum magna in luctus. Quisque commodo elit at ligula commodo convallis. Aliquam vitae viverra est. Suspendisse eu odio bibendum, cursus ante sit amet, dictum risus. Quisque pulvinar tempor nibh, ut iaculis augue. Nulla a tincidunt arcu. Aenean interdum blandit congue. Nulla vitae ipsum accumsan, vehicula neque sit amet, maximus metus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Pellentesque arcu erat, cursus porta ligula id, vulputate porta risus. Aliquam varius augue et molestie dignissim.</p>
+
+                            <p>In non dignissim risus. Vestibulum vestibulum elit eu sodales pulvinar. Quisque velit justo, finibus sagittis dictum quis, tincidunt molestie purus. Cras malesuada malesuada iaculis. Nam in molestie dolor. Pellentesque sit amet aliquet orci. Fusce molestie nibh in sem viverra, id vestibulum velit tincidunt. Cras quis tincidunt tellus. Vivamus id interdum eros, eget volutpat dolor. Cras tortor felis, tempus ac enim eget, placerat ultrices quam. Vestibulum pharetra et quam sit amet tristique. Sed nec dolor arcu. Integer eleifend dui sapien, et fermentum ipsum molestie quis. Praesent vitae sapien viverra, vulputate urna nec, efficitur justo. Nulla nec suscipit metus.</p>
+
+                            <p>Nullam nec dignissim lorem. Vivamus magna dui, tempus non blandit nec, iaculis vel odio. Phasellus fermentum dolor eget mauris tempus, eget accumsan eros tincidunt. Duis ut malesuada eros. Nulla facilisi. Vestibulum sit amet erat tortor. Nulla quis nisi at lectus varius condimentum id sit amet arcu. Fusce commodo dolor ligula, in tempus ipsum imperdiet ullamcorper. Curabitur aliquet ac lacus et aliquam. Nam pulvinar lobortis efficitur. Ut eu sodales velit. Nullam at nisl pretium, auctor ligula in, ornare arcu. Vestibulum bibendum sapien quis sapien consectetur, eu pulvinar orci convallis. Donec feugiat non odio ut gravida. Suspendisse eros leo, consectetur ut consequat sed, pharetra ac orci. Mauris finibus interdum purus, nec ultrices nisl aliquet non.</p>
+
+                            <p>Mauris fermentum vitae orci vitae molestie. Nulla ullamcorper, risus sit amet molestie pretium, est odio mollis quam, vitae consequat magna arcu nec magna. Nunc tincidunt velit sapien, vel rhoncus nisi fermentum id. Nunc non ante cursus, viverra libero sed, scelerisque nulla. Maecenas id risus ut ex efficitur tincidunt ut eu mauris. Ut non velit in justo condimentum lacinia. Interdum et malesuada fames ac ante ipsum primis in faucibus.</p>
+
+                            <p>Cras felis felis, rutrum a pellentesque ut, mattis at diam. Ut commodo enim sed dui cursus congue. Pellentesque mollis quis justo ac semper. Vivamus orci metus, egestas vel urna quis, tempor hendrerit orci. Vestibulum tellus odio, bibendum eget pulvinar id, mollis in odio. Vestibulum sed volutpat sem, in varius nulla. Suspendisse nec dapibus lorem. Aliquam semper auctor lorem. Fusce condimentum nisl id odio vestibulum sollicitudin. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nam rhoncus lacinia massa aliquet ornare.</p>
+
+                            <p>Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur lacus dolor, vulputate eget dignissim ut, interdum quis lectus. Duis laoreet justo magna, id porta augue interdum eget. Quisque lobortis orci nunc. Nulla in vestibulum mi. Curabitur feugiat congue massa at facilisis. Integer scelerisque consectetur dui a sollicitudin. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nunc lobortis, nibh at gravida placerat, lectus nisi tincidunt odio, non accumsan ex ipsum vel sem. Duis et magna sit amet ex fermentum accumsan sit amet sed nulla. Morbi interdum, tellus ut pellentesque dapibus, enim velit sodales mauris, a egestas dolor lectus in est. Mauris vel ex non tortor vehicula mollis fermentum nec odio. Donec a ante sem.</p>
+
+                            <p>Fusce laoreet, arcu vel iaculis gravida, leo ex congue ipsum, at maximus quam ligula laoreet sem. Duis in nibh finibus, semper elit eu, tempus quam. Praesent mattis elit nec risus ornare, vitae sodales eros volutpat. Praesent at neque eget felis elementum consequat interdum nec lacus. Etiam auctor fermentum eros malesuada faucibus. Proin magna justo, pretium eu tempus eget, sodales in elit. Aliquam sed pretium lacus. Quisque vehicula ante orci. Donec non vestibulum ex. Cras ultricies nec dolor a congue. Nam ut scelerisque orci. Vestibulum mi erat, venenatis dapibus sollicitudin et, sodales eget ante. Integer tellus lorem, dignissim in ullamcorper vel, pharetra quis mauris.</p>
+
+                            <p>Cras id facilisis nunc, vitae fermentum sapien. Integer in varius lacus, at ornare dolor. Nulla facilisi. Nunc feugiat et nisi at sagittis. Nunc quis semper justo. Sed velit lectus, congue non justo facilisis, luctus faucibus massa. Aliquam hendrerit sit amet nisl sed cursus. Phasellus porttitor sodales est, vel ornare nibh ornare ut. Fusce iaculis, magna lobortis ultricies laoreet, purus metus pretium massa, vel tempor nisl augue in justo.</p>
+
+                            <p>Sed non eros erat. Sed interdum odio et erat elementum, quis tincidunt sapien euismod. In tempor libero ipsum, rhoncus porttitor felis cursus hendrerit. Aenean facilisis velit non mauris ullamcorper fermentum. Suspendisse bibendum lorem eros, ut fermentum nisi sollicitudin et. Praesent sed orci at eros aliquet venenatis. Aenean diam eros, mattis eget orci et, varius rutrum ante. Aenean at efficitur nisl, et gravida ex. Aliquam erat volutpat. Integer sit amet erat varius, aliquet enim ut, auctor nisl. Fusce magna purus, pulvinar at tristique nec, lacinia non arcu. Donec dapibus dolor arcu, ac faucibus velit gravida sit amet. Maecenas volutpat sollicitudin tellus et hendrerit. Pellentesque malesuada lectus id hendrerit congue.</p>
+
+                            <p>Mauris odio lacus, malesuada nec fermentum et, fringilla at lacus. Fusce accumsan erat ultrices arcu molestie, nec auctor mauris commodo. Sed varius nibh elementum, laoreet orci at, laoreet sem. Phasellus sollicitudin aliquam felis nec lacinia. In vel sodales purus, at venenatis libero. Maecenas ut lacus vitae metus posuere vulputate. Nunc tincidunt luctus eros a hendrerit. Quisque ac consequat urna, suscipit eleifend ante. Nam aliquet interdum luctus. Quisque mauris lacus, pharetra at velit sit amet, laoreet interdum risus. Nullam lectus enim, ornare vitae gravida nec, lacinia ac est. Fusce ac lobortis sapien, sed sagittis nunc. Suspendisse volutpat accumsan quam. Vivamus convallis elit tortor, non tincidunt diam tincidunt nec. Vestibulum blandit lorem eget elit molestie ornare.</p>
+
+                            <p>Maecenas tempus nibh ac felis feugiat, ac condimentum dui consectetur. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ac maximus dolor. Nunc nec est leo. Phasellus lacus leo, semper vulputate ligula vel, maximus mattis mauris. Aliquam vel risus quis est feugiat pellentesque vel sit amet erat. Maecenas sed congue risus. Phasellus eleifend convallis venenatis.</p>
+
+                            <p>Nulla dui nunc, bibendum eget tempor vel, fringilla non nunc. Nam maximus ipsum at est maximus, nec hendrerit enim posuere. Vestibulum ullamcorper convallis est sed accumsan. Phasellus gravida nisl a massa semper, in egestas libero interdum. Cras egestas gravida fermentum. Proin et aliquam elit. Curabitur id pharetra magna, vel eleifend justo. Nunc auctor nulla justo, vel porta neque vestibulum tincidunt. Donec purus velit, placerat ac varius tempor, imperdiet lobortis risus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Aenean non turpis sagittis, scelerisque eros vel, porta justo. Donec nibh mauris, rutrum vitae nisl ullamcorper, interdum ullamcorper tellus. Nullam facilisis porta nisl in ullamcorper. Donec vitae velit varius, rhoncus quam id, egestas arcu.</p>
+                            <div className={`article-card-${currentVariant}-preview-read-more`}>
+                                <button>Lire la suite</button>
+                                {/* <button><Link to={`article/${useCreateSlug(article.title)}`} state={article}>Lire la suite</Link></button> */}
+                            </div>
+                        </div>
+                    </div>
+                </Link>
+            }
+
+
+            {/* ----- Format : Aside, Long Aside -----*/}
+            { (currentVariant === 'aside' || currentVariant === 'long-aside') && 
+                <Link to={`${basePath}/article/${useCreateSlug(article.title)}`} state={article}>
+                    <div className={`article-card article-card-${currentVariant}`}>
+                        <div className={`article-card-${currentVariant}-left-column`}>
+                                {/* --- Image --- */}
+                                <div className="article-card-image article-card-ratio-image-16-9">
+                                    <img src={article.image} alt="Article Card Illustration" />
+                                </div>
+                        </div>
+
+                        <div className={`article-card-${currentVariant}-right-column`}>
+                                {/* --- Title --- */}
+                                <div className={`article-card-title article-card-${currentVariant}-title`}>
+                                    <p>{article.title}</p>
+                                </div>
+                        </div>
+                    </div>
+                </Link>
+            }
+
+
+            {/* ----- Format : Search -----*/}
+
+            { currentVariant === 'search' && 
+                <Link to={`${basePath}/article/${useCreateSlug(article.title)}`} state={article}>
+                    <div className="article-card article-card-search">
+                        <div className="article-card-search-left-column">
+                            {/* --- Image --- */}
+                            <div className="article-card-image article-card-ratio-image-16-9">
+                                <img src={article.image} alt="Article Card Illustration" />
+                            </div>
+                        </div>
+
+                        <div className="article-card-search-right-column">
+                            {/* --- Title --- */}
+                            <div className={`article-card-title article-card-search-title`}>
+                                <p>{article.title}</p>
+                            </div>
+
+                            {/* --- Date --- */}
+                            <div className={`article-card-search-date`}>
+                                <p>{`${date} ${month}, ${year}`}</p>
+                            </div>
+
+                            {/* --- Description --- */}
+                            <div className={`article-card-search-description`}>
+                                <p>{article.description}</p>
+                            </div>
+                        </div>
+                    </div>
+                </Link>
+            }
+        </>
+    )
+}
+
+
+
+

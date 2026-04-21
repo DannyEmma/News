@@ -1,0 +1,200 @@
+.article-card{
+    color: var(--black);
+}
+
+/* --- Hover ---*/
+.article-card-title:hover, .article-card-description:hover{
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
+}
+.article-card-image{
+   position: relative;
+}
+.article-card-image:hover:after{
+   opacity: 0.3;
+}
+.article-card-image:after{
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: gray;
+    opacity: 0;
+    transition: opacity 200ms;
+}
+
+/* --- 16/9 ratio to the container of the image ---*/
+.article-card-ratio-image-16-9{
+    position: relative;
+    width: 100%;
+    padding-top: 56.25% ;
+    overflow: hidden;
+}
+.article-card-ratio-image-16-9 img{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+
+/* ---------- Highlight Format ----------- */
+
+.article-card-highlight{
+    width: 100%;
+    overflow: hidden;
+}
+.article-card-highlight-title p{
+    font-size: 43px;
+    font-weight: bold;
+    letter-spacing: -2px;
+    text-align: center;
+    margin-bottom: 15px;
+    line-height: 50px;
+}
+.article-card-highlight-description p{
+    line-height: 25px;
+    font-weight: bold;
+    font-size: 21px;
+    margin-top: 5px;
+}
+.article-card-highlight-preview-content{
+    position: relative;
+    max-height: 265px;
+}
+.article-card-highlight-preview-content p{
+    font-size: 18px;
+    line-height: 27px;
+    margin-top: 15px;
+}
+.article-card-highlight-preview-read-more{
+    position: absolute;
+    bottom: 0;
+    height: 140px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 70%);;
+}
+.article-card-highlight-preview-read-more button{
+    border: none;
+    background: var(--black);
+    border-radius: 50px;
+    color: var(--gray-text);
+    font-size: 15px;
+    padding: 10px 60px;
+    cursor: pointer;
+}
+
+/* ---------- Normal Format ----------- */
+.article-card-normal-description, .article-card-normal-preview-content{
+   display: none;
+}
+.article-card-normal{
+    margin-bottom: 20px;
+}
+.article-card-normal-title p{
+    font-size: 22px;
+    margin-top: 8px;
+    font-weight: bold;
+}
+
+/* ---------- Aside , Long aside Format ----------- */
+.article-card-aside-description, 
+.article-card-aside-preview-content, 
+.article-card-long-aside-description, 
+.article-card-long-aside-preview-content{
+    display: none;
+ }
+.article-card-aside, .article-card-long-aside{
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    border-top: 1px solid var(--gray-border);
+    padding: 15px 0;
+}
+.article-card-aside-title p, .article-card-long-aside-title p{
+    font-size: 16px;
+    line-height: 22px;
+}
+.article-card-aside-left-column{
+    width: 40%;
+}
+.article-card-aside-right-column{
+    width: 60%;
+}
+.article-card-long-aside-left-column{
+    width: 20%;
+}
+.article-card-long-aside-right-column{
+    width: 80%;
+}
+
+/* ---------- Inline Format ----------- */
+.article-card-inline-image, .article-card-inline-description, .article-card-inline-preview-content, .article-card-inline-image{
+    display: none;
+ }
+.article-card-inline{
+    border-top: 1px solid var(--gray-border);
+    padding: 12px 0;
+}
+.article-card-inline-title p{
+    font-size: 16px;
+    line-height: 22px;
+}
+
+/* ---------- Search Format ----------- */
+.article-card-search-preview-content{
+    display: none;
+}
+.article-card-search{
+    display: flex;
+    gap: 15px;
+    border-bottom: 1px solid var(--gray-border);
+    padding: 20px 0;
+}
+.article-card-search-left-column{
+    flex: 3.5;
+}
+.article-card-search-right-column{
+    flex: 7;
+}
+.article-card-search-title p{
+    font-size: 25px;
+    font-weight: bold;
+}
+.article-card-search-date p{
+    font-size: 14px;
+    color: #808080b3;
+    margin-top: 7px;
+    text-transform: capitalize;
+}
+.article-card-search-description p{
+    font-size: 17px;
+    line-height: 24px;
+    margin-top: 7px;
+}
+
+
+/* ---------- RESPONSIVE ---------- */
+@media(max-width: 760px){
+    .article-card-search{
+        flex-direction: column;
+    }
+    #search-filter-bar-container{
+        flex-direction: column-reverse;
+    }
+}
+@media(max-width: 379px){
+    .article-card-highlight-title p{
+        font-size: 35px;
+        line-height: 42px;
+    }
+}

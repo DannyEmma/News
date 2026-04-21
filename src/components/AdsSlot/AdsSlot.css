@@ -1,0 +1,22 @@
+.ads-slot-square p, .ads-slot-rectangle p{
+    font-size: 18px;
+    color: #858585;
+}
+.ads-slot{
+    background: var(--gray-text);
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.ads-slot-square{
+    width: 100%;
+    max-width: 300px;
+}
+.ads-slot-square p{
+    padding: 41.5% 0;
+}
+.ads-slot-rectangle{
+    max-width: 730px;
+    height: 110px;
+}

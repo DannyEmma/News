@@ -1,0 +1,50 @@
+#category h1{
+    font-size: 40px;
+    font-weight: 900;
+    margin-bottom: 35px;
+}
+#category h2{
+    font-size: 30px;
+    font-weight: 900;
+    margin-bottom: 25px;
+}
+#category-headline-section, #category-more-news-section, #category-missed-section{
+    display: flex;
+    gap: 25px;
+    margin-bottom: 100px;
+}
+#category-more-news-section .article-card-normal{
+    flex: 1;
+    max-width: 345px;
+}
+#category-headline-section .col1, #category-missed-section .col1{
+    flex: 2;
+}
+#category-headline-section .col2, 
+#category-headline-section .col3, 
+#category-missed-section .col2,
+ #category-missed-section .col3{
+    flex: 1;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 979px){
+    #category-headline-section, #category-more-news-section, #category-missed-section{
+        flex-direction: column;
+        gap: 30px;
+    }
+    #category .column{
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+    #category-more-news-section{
+        align-items: center;
+    }
+    #category h2:first-of-type{
+        margin-bottom: 60px;
+    }
+    #category-missed-section .col3{
+        display: none;
+    }
+}

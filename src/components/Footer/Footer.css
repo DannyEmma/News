@@ -1,0 +1,104 @@
+footer{
+    background: var(--black);
+    color: var(--gray-text);
+    padding-top: 40px;
+    padding-bottom: 20px;
+    z-index: 1000;
+}
+#category-links{
+    margin-top: 40px;
+}
+#category-links p{
+    font-size: 25px;
+    font-weight: bold;
+}
+#category-links a{
+    color: var(--gray-text);
+    text-transform: capitalize;
+}
+#category-links ul{
+    display: flex;
+    gap: 35px;
+    margin-top: 15px;
+}
+#socials-network{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    border-top: 1px solid var(--gray-border);
+    border-bottom: 1px solid var(--gray-border);
+    margin-top: 50px;
+}
+#socials-network ul{
+    display: flex;
+    gap: 20px;
+}
+#socials-network li{
+    display: flex;
+    align-items: center;
+}
+#socials-network li a{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--gray-text);
+}
+#socials-network ul li:nth-child(3) span:first-child{
+   font-size: 30px;
+}
+#footer-logo{
+    width: 40px;
+}
+footer li img{
+    background: var(--gray-text);
+    width: 24px;
+}
+footer li:last-child img{
+    background: none;
+    width: 30px;
+}
+#copyright-container p{
+    font-size: 14px;
+    line-height: 20px;
+    margin-top: 20px;
+}
+
+
+/* ---------- RESPONSIVE ---------- */
+@media(max-width: 979px){
+    #category-links p{
+        text-align: center;
+    }
+    #category-links ul{
+        flex-direction: column;
+        margin-top: 20px;
+        align-items: center;
+        gap: 20px;
+    }
+    #socials-network{
+        flex-direction: column;
+        gap: 32px;
+        padding: 40px 0;
+    }
+    #socials-network ul{
+        flex-direction: column;
+        padding-left: 125px;
+    }
+    #socials-network ul li:nth-child(3){
+        position: relative;
+        left: -2px;
+    }
+    #socials-network li a {
+        gap: 20px;
+    }
+    #socials-network ul li:nth-child(3) a{
+        gap: 18px;
+    }
+}
+
+@media(max-width: 400px){
+    #socials-network ul{
+        padding: 0;
+    }
+}

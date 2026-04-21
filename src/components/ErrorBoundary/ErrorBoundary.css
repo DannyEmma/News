@@ -1,0 +1,10 @@
+#error-boundary{
+    padding: 30px;
+    background: #fabcbc;
+    border: 2px solid #cc151773;
+    border-radius: 5px;
+}
+#error-boundary p{
+    font-size: 18px;
+    color: var(--black);
+}

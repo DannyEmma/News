@@ -1,0 +1,42 @@
+:root{
+    /* --- Colors --- */
+    --red: #cc1517;
+    --gray-text: #e6e6e6;
+    --black: #0c0c0c;
+    --gray-border: #80808040;
+
+    /* --- Size --- */
+    --max-width: 1370px;
+}
+*{
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    text-decoration: none;
+    font-family: "Lato", sans-serif;
+}
+title{
+    display: none;
+}
+html, body{
+    height: 100%;
+}
+main{
+    padding-top: 55px;
+    padding-bottom: 80px;
+}
+.container{
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 30px;
+}
+.no-scroll{
+    overflow: hidden;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media(max-width: 979px){
+    .container{
+        padding: 0 10px;
+    }
+}
