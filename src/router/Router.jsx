@@ -1,32 +1,32 @@
-import { createBrowserRouter, RouterProvider, useLocation } from "react-router-dom"
-import useMediaStackAPI from "../hooks/useMediaStackAPI.js"
-import useDataTest from "../hooks/useDataTest.js"
-import useExistingCategory from "../hooks/useExistingCategory.js"
-import useTranslateCategory from "../hooks/useTranslateCategory.js"
-import useRetrieveDoublons from "../hooks/useRetrieveDoublons.js"
-import App from "../App"
-import Home from "../components/Pages/Home/Home"
-import Article from "../components/Pages/Article/Article"
-import Category from "../components/Pages/Category/Category"
-import ErrorBoundary from "../components/ErrorBoundary/ErrorBoundary"
-import NotFound from "../components/Pages/Errors/NotFound/NotFound"
-import Search from "../components/Pages/Search/Search"
+import { createBrowserRouter, RouterProvider, useLocation } from 'react-router-dom'
+import useMediaStackAPI from '../hooks/useMediaStackAPI.js'
+import useDataTest from '../hooks/useDataTest.js'
+import useExistingCategory from '../hooks/useExistingCategory.js'
+import useTranslateCategory from '../hooks/useTranslateCategory.js'
+import useRetrieveDoublons from '../hooks/useRetrieveDoublons.js'
+import App from '../App'
+import Home from '../components/Pages/Home/Home'
+import Article from '../components/Pages/Article/Article'
+import Category from '../components/Pages/Category/Category'
+import ErrorBoundary from '../components/ErrorBoundary/ErrorBoundary'
+import NotFound from '../components/Pages/Errors/NotFound/NotFound'
+import Search from '../components/Pages/Search/Search'
 
 const routerConfig = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <App />,
     children: [
       {
-        path: "/",
+        path: '/',
         element: <Home />,
         loader: async () => {
-          let headlinesArticles = await useMediaStackAPI({ languages: "fr", countries: "fr", categories: "-general" })
-          let featuredArticles = await useMediaStackAPI({ sort: "popularity", languages: "fr", countries: "fr", categories: "-general" })
+          let headlinesArticles = await useMediaStackAPI({ languages: 'fr', countries: 'fr', categories: '-general' })
+          let featuredArticles = await useMediaStackAPI({ sort: 'popularity', languages: 'fr', countries: 'fr', categories: '-general' })
 
           // useDataTest is use to not exceed the free limit of the api
-          // let headlinesArticles = await useDataTest()
-          // let featuredArticles = await useDataTest()
+          // let headlinesArticles = (await useDataTest()).data
+          // let featuredArticles = (await useDataTest()).data
 
           headlinesArticles = useRetrieveDoublons(headlinesArticles ?? [])
           featuredArticles = useRetrieveDoublons(featuredArticles ?? [])
@@ -39,24 +39,25 @@ const routerConfig = createBrowserRouter([
         },
       },
       {
-        path: "search/:query",
+        path: 'search/:query',
         element: <Search />,
         errorElement: <ErrorBoundary />,
       },
       {
-        path: "search/:query/article/:slug",
+        path: 'search/:query/article/:slug',
         element: <Article />,
         errorElement: <ErrorBoundary />,
       },
 
       //-- Catégory Route --
       {
-        path: ":category",
+        path: ':category',
         element: <Category />,
         loader: async ({ params }) => {
+          //-- Use to be sur is a right category --
           if (!useExistingCategory(params.category)) throw new Response(null, { status: 404 })
 
-          let articles = await useMediaStackAPI({ limit: 33, languages: "fr", countries: "fr", categories: useTranslateCategory("eng", params.category) })
+          let articles = await useMediaStackAPI({ limit: 33, languages: 'fr', countries: 'fr', categories: useTranslateCategory('eng', params.category) })
           articles = useRetrieveDoublons(articles)
 
           return {
@@ -68,15 +69,15 @@ const routerConfig = createBrowserRouter([
         errorElement: <NotFound />,
       },
       {
-        path: ":category/article/:slug",
+        path: ':category/article/:slug',
         element: <Article />,
         loader: async ({ params }) => {
           if (!useExistingCategory(params.category)) throw new Response(null, { status: 404 })
 
           let articlesSuggestions = await useMediaStackAPI({
-            languages: "fr",
-            countries: "fr",
-            categories: useTranslateCategory("eng", params.category),
+            languages: 'fr',
+            countries: 'fr',
+            categories: useTranslateCategory('eng', params.category),
           }).then((response) => response)
 
           return useRetrieveDoublons(articlesSuggestions)
@@ -86,7 +87,7 @@ const routerConfig = createBrowserRouter([
 
       //-- All others paths --
       {
-        path: "*",
+        path: '*',
         element: <NotFound />,
       },
     ],
